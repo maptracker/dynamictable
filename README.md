@@ -12,10 +12,11 @@ The package is designed for simple and rapid use
 options. See `?dynamictable`, or run the "hyperCustomizedTable" demo
 to see most of the options applied.
 
-To install:
+### Installation instructions
 
 ```R
-## ... 3-Feb-2017 ... submitting to CRAN, will update when available
+## Install from CRAN
+## ... 3-Feb-2017 ... submitting today, will update when available
 
 ## //OR// Directly from github.com
 ## If you do not have devtools, run: install.packages("devtools")
@@ -23,6 +24,7 @@ library("devtools")
 install_github("maptracker/dynamictable")
 ```
 
+### Examples
 
 ```R
 ## Quick table generation

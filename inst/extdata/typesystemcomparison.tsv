@@ -1,0 +1,45 @@
+## https://en.wikipedia.org/wiki/Comparison_of_type_systems
+## Creative Commons Attribution-ShareAlike License
+## Retrieved 2017 Jan 17
+Programming language	static-dynamic	strong-weak	safety	nominative-structural
+Ada	static	strong	safe	nominative
+Assembly language	none	strong	unsafe	structural
+APL	dynamic	weak	safe	nominative
+BASIC	static	weak	safe	nominative
+C	static	weak	unsafe	nominative
+C++	static	strong	unsafe	nominative
+"C#"	static	strong	both	nominative
+Cayenne	dependent	strong	safe	structural
+Clipper	dynamic	weak	safe	duck
+D	static	strong	both	nominative
+Delphi	static	strong	safe	nominative
+E	dynamic	strong	safe	nominative + duck
+Eiffel	static	strong	safe	nominative
+Erlang	dynamic	strong	safe	nominative
+"F#"	static	strong	safe	nominative
+Fortran	static	strong	safe	nominative
+Go	static	strong	safe	structural
+Groovy	dynamic	strong	safe	duck
+Haskell	static	strong	safe	nominative + structural
+Io	dynamic	strong	safe	duck
+Java	static	strong	safe	nominative
+JavaScript	dynamic	weak	safe	duck
+Julia	static+dynamic	strong	NA	NA
+Lisp	dynamic	strong	safe	structural
+Lua	dynamic	weak	safe	structural
+ML	static	strong	safe	structural
+Objective-C	static+dynamic	strong	unsafe	nominative
+Pascal	static	strong	safe	nominative
+Perl 1-5	dynamic	weak	safe	nominative
+Perl 6	hybrid	hybrid	safe	duck
+PHP	dynamic	weak	safe	NA
+Pike	static+dynamic	strong	safe	structural
+Python	dynamic	strong	safe	duck
+Ruby	dynamic	strong	safe	duck
+Scala	static	strong	safe	nominative + structural
+Scheme	dynamic	strong	safe	nominative
+Smalltalk	dynamic	strong	safe	duck
+Swift	static	strong	safe	nominative
+Visual Basic	hybrid	hybrid	safe	nominative
+Windows PowerShell	hybrid	hybrid	safe	duck
+xHarbour	dynamic	weak	safe	duck

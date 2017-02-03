@@ -1,0 +1,21 @@
+## https://stackoverflow.com/a/13463722
+
+## Putting PNG files somewhere where they will not irritate package
+## installation, but not get installed either. They do not need to
+## copy over images, they've already been serialized in CSS:
+
+pngs/.*.png$
+pngs/.*.sh$
+pngs/README
+
+## Eh. Can't seem to make the installed empty pngs directory itself go away...
+
+pngs/
+
+
+README.md
+PubD-Disclosure-Approval.md
+
+.git
+.gitignore
+.+~

@@ -1,0 +1,21 @@
+I wanted some data sets to demonstrate factor level faceting in
+basichtmltables; That is, I was looking for data sets to highlight the
+ability to toggle row visibility based on factor level. Unfortunately
+there are not many such sets in R, most are entirely numeric. A
+notable exception is `lattice::barley`, but it is not part of the core
+data sets, and has somewhat mundane levels.
+
+These data sets were chosen because:
+
+* They have multiple factor columns
+* They have a permissive license (Wikipedia CC-BY-SA)
+* They were reasonably sized and modestly interesting
+* They seemed unlikely to make anyone unhappy
+
+The final R objects include (as attributes) the URL the data were
+pulled from, as well as the date the data were recovered. They are
+constructed from TSV files using scripts in `inst/rawTSV`.
+
+Some amount of post-processing was performed, for example removing
+"[12]"-type footnote references or removing low-information columns.
+

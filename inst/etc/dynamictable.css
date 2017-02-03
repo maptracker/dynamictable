@@ -1,0 +1,118 @@
+/* Basic table styling */
+.tab, .tab table    { border-collapse: collapse; }
+.tab th, .header { background-color: #ffc; }
+.tab th, .tab td { border: #fc9 solid 1px; padding: 2px;
+                   empty-cells: show; vertical-align: top; }
+.help { cursor: help; }
+.err  { background-color: yellow; color: red; }
+.desc { font-size: 0.7em; color: brown; font-style: italic; }
+.n    { text-align: right; font-family: monospace; }
+.reset, .submit { font-size: 0.7em; cursor: crosshair ! important;
+         font-weight: bold; border-radius: 5px; 
+         padding: 1px 3px; border: transparent solid 2px; }
+.reset  { color: #fff; background-color: #000; }
+.submit { color: #ff0; background-color: #00f; }
+
+.Q1, .Q2, .Q3, .Q4 { padding: 1px; margin: 0px 1px; 
+         font: monospace; font-size: 0.7em; }
+.Q1 { background-color: #fff; color: #000; }
+.Q2 { background-color: #aaa; color: #000; }
+.Q3 { background-color: #555; color: #fff; }
+.Q4 { background-color: #000; color: #fff; }
+
+.numFilt { width: 5em; }
+.txtFilt { width: 12em; }
+
+/* Truncated text styles */
+.trunc { display: none; }
+.trunc[visible='yes'] { display:inline ! important; }
+.tTog { display:inline ! important; color: green; font-weight: bold; cursor:
+        e-resize; }
+.tTog[visible='yes'] {color: red ! important; cursor: w-resize ! important; }
+.cnt { color: #644; text-shadow: 1px 1px #fff; background-color: transparent;
+       font-size: 0.6em; }
+
+/* Factor filter buttons, row functional styling 
+   Drop shadow: https://stackoverflow.com/a/4919231
+
+   For background-image tricks, Chrome was unhappy if I had a title
+   attribute set and did NOT have content set. The content is a
+   transparent pixel.
+   Warning that Chrome expects a src: https://stackoverflow.com/a/9173082
+   Content required: https://stackoverflow.com/a/10247567
+ */
+
+.button { color: #644; cursor: crosshair; font-weight: bold;
+         text-shadow: 1px 1px #fff; padding-right: 9px;
+         border-bottom: #999 solid 1px; border-right: #999 solid 1px;
+         border-top: none; border-left: none; } 
+.button[picked='yes'] { font-weight: bold; color: black ! important;
+         border-top: #999 solid 1px; border-left: #999 solid 1px;
+         border-bottom: none; border-right: none; } 
+.button[picked='yes'] .cnt { color: blue ! important; text-shadow: none;
+         background-color:yellow ! important;  }
+.button[picked='yes'] { background-position: right center; background-repeat: no-repeat; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEDFCU45ceHDAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABVSURBVBjTjZAxDsAgDAPPkchTy5v6VRZ3KaiiBdVLBp/ixOKWbTNJkgBiBQCUoxggVkDWHAmxA9rZGHE7ACCy5jD6fD1g27P53AKgftxXTK9Bf3q6AMCJKzpxE5ZDAAAAAElFTkSuQmCC'); }
+
+/* Sort image tokens 
+   Background image (sort arrows): https://stackoverflow.com/a/735408 */
+th { cursor: n-resize; }
+th[sorted='up'] { cursor: s-resize ! important; background-position: left center; padding-left: 7px; background-repeat: no-repeat; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAJAQMAAADAY3TdAAAABlBMVEUAAAAAwwBFsD1CAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgDAYUOSL6wMQNAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAABFJREFUCNdjUGAAwQIw/AGCABo6BJlojReVAAAAAElFTkSuQmCC'); }
+th[sorted='down'] { background-position: left center; padding-left: 7px; background-repeat: no-repeat; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAJAQMAAADAY3TdAAAABlBMVEUAAAD9AAAYe1lMAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgDAYUOQexxBBKAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAABFJREFUCNdj+MEAggVgqACCADiaBJmgPcBCAAAAAElFTkSuQmCC'); }
+
+/* Filter indicator/pop-up tokens 
+   CSS-based img src: https://stackoverflow.com/a/10247567 */
+.fTog { width: 0px; height: 0px; margin-left: 2px; padding: 5px;
+        cursor: crosshair; 
+        background-position: right center; background-repeat: no-repeat;
+        content:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhAQYVAR+HOUnEAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==');  }
+
+.fTog[filtered='no'] { background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAJAQMAAAA1nf9tAAAABlBMVEUAAACIiIhaeOqmAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgDA8RFjqAc+lXAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAABRJREFUCNdjsGE4zFDHYMMgAYUCABrFAio0lpm1AAAAAElFTkSuQmCC'); }
+
+.fTog[filtered='yes'] { background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAJCAYAAAAPU20uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QELFCQdcmxK5QAAAF1JREFUGNNjZICC/z+9/jMgAUb2bYwMDAwMLDAJcfNVyPIM/3+G/WdgYGBgFDP48v/lyTAGbEDcfBUDEzbdyGJM6ALobCYGAoCwglcXeBhxSb66wMPIBGOg2w8TAwDZXxzGG7sUBAAAAABJRU5ErkJggg=='); }
+
+.close { width: 0px; height:0px; padding: 4px; cursor: crosshair; border: 0;
+         background-position: right center; background-repeat: no-repeat;
+         content:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhAQYVAR+HOUnEAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==');
+         background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AwQDx0KW5zJgwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABDSURBVAjXfY47EsAgEEKfNLmbB/ZuFispYj4ax62A4e2QXDOA+V/CNTvAAZ61vtV2lAEVgK7Xb9i9VsTttSKeRbu1JwQYIUIgbTnbAAAAAElFTkSuQmCC');  }
+
+.closeAll { width: 0px; height: 0px; margin-left: 2px; padding: 5px;
+            cursor: crosshair ! important; 
+            background-position: right center; background-repeat: no-repeat;
+            content:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhAQYVAR+HOUnEAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==');
+         background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJAgMAAACd/+6DAAAACVBMVEUAAGf9AAD/+UqJkVf7AAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+EBEhMTGyNWQXQAAAArSURBVAjXY+BawcAguYqBYdmqBoaZyxwYVq1sYFiW5sCwEshXy2JgAMoDAMo3Cvm9pkpjAAAAAElFTkSuQmCC');  }
+
+.filtBox {display: none; position: absolute; cursor: move;
+          background-color: #ffc; border: #036 solid 2px; margin: 3px; }
+.filtBox[visible='yes'] { display:block ! important; }
+
+.resetall { width: 0px; height: 0px; margin-left: 2px; padding: 5px;
+            cursor: crosshair ! important; 
+            background-position: right center; background-repeat: no-repeat;
+            content:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhAQYVAR+HOUnEAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==');
+            background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJAgMAAACd/+6DAAAACVBMVEUAAGcWMPT/+UpdN4XMAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhAQYVAiL0fFYWAAAALElEQVQI12PgWsHAoBnJwLBsaQPDrKkNDKtWNTBMXdnAMG1ZA4NkFAMDUB4AylELIqElhMUAAAAASUVORK5CYII='); }
+
+
+/* Perky CSS-based tooltips @AndreaLigios
+   https://stackoverflow.com/a/25813336
+   https://jsfiddle.net/AndreaLigios/jtLbpy62/ 
+   Used for pop-up showing intervals inside a color scale 
+
+   Tried to get embedded '\A' newlines to work in a content: attr(),
+   but failed spectacularly. Ended up using two attr() and literal '\A'
+
+*/
+
+[tooltip]:before {            
+    position : absolute; opacity : 0;
+    background-color: white;
+    padding: 2px 8px; border-radius: 5px;
+    margin-top: -30px; margin-left: 10px;    
+}
+[tooltip]:hover:before {        
+    opacity : 1;
+    content : attr(tooltip) "\A" attr(numrow); 
+    background-color: inherit;
+    color: inherit;
+    border: #063 solid 2px;
+    white-space: pre;
+}

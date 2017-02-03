@@ -1,0 +1,10 @@
+These are small PNG files used for HTML UI components (eg sort and
+filter buttons). An included shell script simply calculates the base64
+serialized representation of each image, which are then (manually)
+added to the style declarations in `../etc/basichtmltable.css`.
+
+While the original content of the directory is excluded from the
+installation, I have not been able to figure out how to remove the
+directory itself, so I am leaving this README as an explanation. The
+curious can browse the basichtmltable source repository for the
+original PNG files.

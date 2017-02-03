@@ -1,0 +1,9 @@
+These files provide the supporting code (CSS and Javascript) used by
+the user's web browser to provide dynamic functionality to the HTML
+table. The code will be copied directly into the HTML document (as
+<style> and <script> blocks), rather than linked to; This is a design
+decision to assure that the resulting output document is stand-alone.
+
+Wtihin `dynamictable.R` the relevant calls are from `.cssStyles()` and
+`.jsCode()`, both utilizing `.readSupporting()` to read the files
+contained in this directory.

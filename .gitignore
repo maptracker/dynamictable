@@ -1,0 +1,11 @@
+*~
+*#
+.#*
+
+.Rhistory
+.Rproj.user
+
+## The full vampires table, includes columns that might cause problems
+## for submission review, so stripping those out (cut -f1-6)
+
+vampiretraits.tsv-FULL

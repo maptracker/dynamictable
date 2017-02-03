@@ -1,0 +1,15 @@
+Package: dynamictable
+Title: Create Simple HTML Pages from Tabular R Data Structures
+Version: 1.0
+Date: 2016-01-12
+Authors@R: person("Charles", "Tilford", email = "cran@agent.fastmail.com", role = c("aut", "cre"))
+Author: Charles Tilford [aut, cre]
+Maintainer: Charles Tilford <cran@agent.fastmail.com>
+Description: Designed to be easy to use but also highly customizable, while generating light-weight self-contained HTML pages. Takes data.frame-compliant structures, arrays, matrices or vectors as input. Generates a single HTML file with a table that includes some dynamic features including sorting, filtering and dynamic truncation of long text. Styling can also be applied to factor levels and as gradients for numerical data.
+Depends:
+    R (>= 3.1)
+Imports: htmltools, digest, methods, stats
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1.9000

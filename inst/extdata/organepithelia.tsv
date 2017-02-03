@@ -1,0 +1,56 @@
+## https://en.wikipedia.org/wiki/Table_of_epithelia_of_human_organs
+## Creative Commons Attribution-ShareAlike License
+## Retrieved 2017 Jan 17
+System 	Tissue 	Epithelium 	Subtype
+circulatory 	blood vessels 	Simple squamous 	endothelium
+digestive 	ducts of submandibular glands 	Stratified columnar 	NA
+digestive 	attached gingiva 	Stratified squamous, keratinized 	NA
+digestive 	dorsum of tongue 	Stratified squamous, keratinized 	NA
+digestive 	hard palate 	Stratified squamous, keratinized 	NA
+digestive 	oesophagus 	Stratified squamous, non-keratinized 	NA
+digestive 	stomach 	Simple columnar, non-ciliated 	gastric epithelium
+digestive 	small intestine 	Simple columnar, non-ciliated 	intestinal epithelium
+digestive 	large intestine 	Simple columnar, non-ciliated 	intestinal epithelium
+digestive 	rectum 	Simple columnar, non-ciliated 	NA
+digestive 	anus 	Stratified squamous, non-keratinized superior to Hilton's white line
+Stratified squamous, keratinized inferior to Hilton's white line 	NA
+digestive 	gallbladder 	Simple columnar, non-ciliated 	NA
+endocrine 	thyroid follicles 	Simple cuboidal 	NA
+nervous 	ependyma 	Simple cuboidal 	NA
+lymphatic 	lymph vessel 	Simple squamous 	endothelium
+integumentary 	skin - dead superficial layer 	Stratified squamous, keratinized 	NA
+integumentary 	sweat gland ducts 	Stratified cuboidal 	NA
+integumentary 	mesothelium of body cavities 	Simple squamous 	mesothelium
+reproductive - female 	ovaries 	Simple cuboidal 	germinal epithelium (female)
+reproductive - female 	Fallopian tubes 	Simple columnar, ciliated 	NA
+reproductive - female 	endometrium (uterus) 	Simple columnar, ciliated 	NA
+reproductive - female 	cervix (endocervix) 	Simple columnar 	NA
+reproductive - female 	cervix (ectocervix) 	Stratified squamous, non-keratinized 	NA
+reproductive - female 	vagina 	Stratified squamous, non-keratinized 	NA
+reproductive - female 	labia majora 	Stratified squamous, keratinized 	NA
+reproductive - male 	tubuli recti 	Simple cuboidal 	germinal epithelium (male)
+reproductive - male 	rete testis 	Simple cuboidal 	NA
+reproductive - male 	efferent ducts 	Pseudostratified columnar 	NA
+reproductive - male 	epididymis 	Pseudostratified columnar, with stereocilia 	NA
+reproductive - male 	vas deferens 	Pseudostratified columnar 	NA
+reproductive - male 	ejaculatory duct 	Simple columnar 	NA
+reproductive - male (gland) 	bulbourethral glands 	Simple columnar 	NA
+reproductive - male (gland) 	seminal vesicle 	Pseudostratified columnar 	NA
+respiratory 	oropharynx 	Stratified squamous, non-keratinized 	NA
+respiratory 	larynx 	Pseudostratified columnar, ciliated 	respiratory epithelium
+respiratory 	larynx - True vocal cords 	Stratified squamous, non-keratinized 	NA
+respiratory 	trachea 	Pseudostratified columnar, ciliated 	respiratory epithelium
+respiratory 	respiratory bronchioles 	Simple cuboidal 	NA
+sensory 	cornea 	Stratified squamous, non-keratinized 	corneal epithelium
+sensory 	nose 	Pseudostratified columnar 	olfactory epithelium
+urinary 	kidney - proximal convoluted tubule 	Simple cuboidal, with microvilli 	NA
+urinary 	kidney - ascending thin limb 	Simple squamous 	NA
+urinary 	kidney - distal convoluted tubule 	Simple cuboidal, without microvilli 	NA
+urinary 	kidney - collecting duct 	Simple cuboidal 	NA
+urinary 	renal pelvis 	Transitional 	urothelium
+urinary 	ureter 	Transitional 	urothelium
+urinary 	urinary bladder 	Transitional 	urothelium
+urinary 	prostatic urethra 	Transitional 	urothelium
+urinary 	membranous urethra 	Pseudostratified columnar, non-ciliated 	NA
+urinary 	penile urethra 	Pseudostratified columnar, non-ciliated 	NA
+urinary 	urinary meatus 	Stratified squamous 	NA

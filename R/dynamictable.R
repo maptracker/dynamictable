@@ -3,8 +3,12 @@
 
 #' Dynamic Table
 #'
-#' Light-weight HTML table with basic sorting and filtering
-#' functionality, designed with the following goals in mind:
+#' Light-weight, non-paginated HTML table with basic sorting,
+#' filtering and automated markup functionality
+#'
+#' @details
+#'
+#' dynamictable was built with the following design goals:
 #' 
 #' \itemize{
 #' 

@@ -105,30 +105,32 @@ will be called to display the newly-created output}
 The file path of the generated HTML document
 }
 \description{
-Light-weight HTML table with basic sorting and filtering
-functionality, designed with the following goals in mind:
+Light-weight, non-paginated HTML table with basic sorting,
+filtering and automated markup functionality
 }
 \details{
+dynamictable was built with the following design goals:
+
 \itemize{
 
-\item Ease of use - A table can be built by passing a single
+  \item Ease of use - A table can be built by passing a single
         object, with reasonable defaults already set
 
-\item Configurable - Default settings can be changed with nested
+  \item Configurable - Default settings can be changed with nested
         list options
 
-\item Single output file - The generated file is entirely self-contained
+  \item Single output file - The generated file is entirely self-contained
 
-\item Lightweight HTML - Most dynamic operations are CSS-driven,
+  \item Lightweight HTML - Most dynamic operations are CSS-driven,
         with a minimum amount of simple JavaScript
 
-\item Compact HTML - The resultant table is designed to pack a
+  \item Compact HTML - The resultant table is designed to pack a
         high amount of information into a given space
 
-\item No pagination - While this will be seen as a limitation by
+  \item No pagination - While this will be seen as a limitation by
         some users, it is an explicit design choice
 
-\item Basic functionality - Sortable columns, per-column filters
+  \item Basic functionality - Sortable columns, per-column filters
         (factor faceting, numeric and text filters), collapsable
         text, automatic and custom gradient generation, hyperlinks,
         mouse-over text

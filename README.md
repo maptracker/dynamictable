@@ -1,4 +1,4 @@
-## dynamic table - Generate interactive HTML tables from R objects
+## dynamictable - Generate interactive HTML tables from R objects
 
 This package will create an interactive HTML table from R matrices and
 data.frames. Tables can be sorted and filtered by interacting with
@@ -11,6 +11,17 @@ The package is designed for simple and rapid use
 (`dynamictable(myObject)`), but also supports extensive customization
 options. See `?dynamictable`, or run the "hyperCustomizedTable" demo
 to see most of the options applied.
+
+To install:
+
+```R
+## ... 3-Feb-2017 ... submitting to CRAN, will update when available
+
+## //OR// Directly from github.com
+## If you do not have devtools, run: install.packages("devtools")
+library("devtools")
+install_github("maptracker/dynamictable")
+```
 
 
 ```R

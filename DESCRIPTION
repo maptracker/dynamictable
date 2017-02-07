@@ -1,6 +1,6 @@
 Package: dynamictable
 Title: Create Simple HTML Pages from Tabular R Data Structures
-Version: 1.0
+Version: 1.01
 Date: 2016-01-12
 Authors@R: person("Charles", "Tilford", email = "cran@agent.fastmail.com", role = c("aut", "cre"))
 Author: Charles Tilford [aut, cre]

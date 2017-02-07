@@ -218,6 +218,10 @@
 #'     specify the bin size. If neither are specified, then 15 bins
 #'     will be used.
 #'
+#'     \item "binVals" - An explicit list of bin values, will override
+#'     "min", "max", "bins" and "step". Used for specifying non-linear
+#'     gradient values.
+#'
 #'     \item "colors" - The colors to use for generating the gradient,
 #'     default are \code{c("#5555ff", "white", "red")}. These will be
 #'     passed to \code{colorRampPalette()}
@@ -250,6 +254,9 @@
 #'     in an "<Other>" category. This is useful for handling columns
 #'     that are mostly controlled vocabullary, but include a few
 #'     "noisy" levels, eg "Yes (except when it is raining)"
+#'
+#'     \item "textFilter" - if \code{TRUE}, will include a free-text
+#'     filter box in addition to facetting buttons.
 #'
 #'     \item "color" - A flag to control how factor levels are colored
 #'
@@ -688,8 +695,9 @@ DynamicTable$methods(
             cTind <- matchCol(cTit)
             colInfo$titInds[[ ci ]] <<- ifelse(is.null(cTind), NA, cTind)
 
-            filtBox <- ""
-            filtOn  <- FALSE
+            filtBox     <- ""
+            hasTextFilt <- FALSE
+            filtOn      <- FALSE
             ## Set factor class callbacks 
             colInfo$facCB[[ ci ]] <<- .self$.nullFunc
             facCol <- getOpt(col, 'byFactor')
@@ -707,7 +715,13 @@ DynamicTable$methods(
                     colInfo$facLU[[ ci ]] <<- fOpts$LU
                     if (filtBox == "") {
                         ## Build in-column filter widget for factor selection
-                        filtBox <- .factorFilterWidget( ci, fOpts )
+                        if (any(fOpts$textFilter)) {
+                            ## Also want a text filter
+                            filtBox <- .textFilterWidget(ci)
+                            hasTextFilt <- TRUE
+                        }
+                        filtBox <- paste(filtBox, .factorFilterWidget(ci,fOpts),
+                                         sep='')
                         if (length(fOpts$activeInd) > 0) filtOn <- TRUE
                     }
                 }
@@ -819,9 +833,11 @@ DynamicTable$methods(
             
             if (filtBox == "") {
                 filtBox <- .textFilterWidget(ci)
+                hasTextFilt <- TRUE
+            }
+            if (hasTextFilt) {
                 allStyles <- c(allStyles, sprintf(
                        "  tr[filt%d='yes'] { display: none ! important; }",ci))
-
             }
             
             ## If a title is provided for the *column*, set it in the th row:
@@ -847,15 +863,26 @@ DynamicTable$methods(
             
             ## Dynamic truncated text management:
             tLen <- getOpt(col, 'truncate')
-            if (is.null(tLen)) {
+            if (is.null(tLen) || is.na(tLen[1])) {
                 ## No truncation requested
                 colInfo$truncLen[[ ci ]] <<- NA
             } else {
-                chk <- suppressWarnings(as.integer(tLen))
+                ## Validate setting as integer
+                chk <- suppressWarnings(as.integer(tLen[1]))
                 if (is.na(chk)) {
                     message("truncate option could not be converted into an integer")
-                } else {
-                    th <- c(th, sprintf("<span ind='%d' onclick='truncCol(event)' class='tTog' title='Toggle all truncated text in column'>&hellip;</span>", ci))
+                } else if (chk > 0) {
+                    ## Valid integer, also non-zero. Do any cells
+                    ## actually exceed the length?
+                    numTrunc <- sum(nchar(data[[ srcInd ]]) > chk,
+                                    na.rm = TRUE)
+                    if (!is.na(numTrunc) && numTrunc > 0) {
+                        ## at least one row has truncated text
+                        th <- c(th, sprintf("<span ind='%d' onclick='truncCol(event)' class='tTog' title='Toggle %d truncated text rows in column'>&hellip;</span>", ci, numTrunc, if (numTrunc==1) { '' } else {'s'}))
+                    } else {
+                        ## Nothing will be truncated, do not include col widget
+                        chk <- NA
+                    }
                 }
                 colInfo$truncLen[[ ci ]] <<- chk
             }
@@ -1007,13 +1034,18 @@ DynamicTable$methods(
     },
 
     .factorFilterWidget = function( ci, fOpts ) {
-        name <- .fallbackName(ci) 
-        head <- paste(.closeImage(), name, "Levels:")
+        head <- if (any(fOpts$textFilter)) {
+            ## Do not include a header if a text filter is already present
+            ""
+        } else {
+            name <- .fallbackName(ci) 
+            paste(.closeImage(), name, "Levels:")
+        }
         paste(c(head,sprintf("<div col='%d' ftype='fact'>",ci),fOpts$buttons,
                 "<button class='reset' onclick='resetFilt(this)' title='Remove all filters from this column'>Reset</button>","</div>"), collapse="\n")
     },
 
-    .textFilterWidget = function (ci) {
+    .textFilterWidget = function (ci, header=TRUE) {
         nm <- .fallbackName(ci)
         paste(c(.closeImage(),nm,"<br>",
                 "<div col='",ci,"' ftype='txt'><input class='txtFilt' onchange='textfilt(this)' value='' reset='' title='Show only rows matching this text (regular expressions supported)'>",
@@ -1185,9 +1217,11 @@ DynamicTable$methods(
         ## Calculates a gradient CSS class, if available
         gInfo <- colInfo$gradInfo[[ ci ]]
         if (is.list( gInfo )) {
-            val  <- as.numeric(data[ri,ci]) # Value of the cell
+            val  <- as.numeric(data[ri,colInfo$srcInds[ci]]) # Value of the cell
             bins <- gInfo$binVals
-            if (val < bins[1]) {
+            if (is.na(val)) {
+                gInfo$naClass
+            } else if (val < bins[1]) {
                 ## Value under the gradient range
                 gInfo$lowClass
             } else if (val > bins[length(bins)]) {
@@ -1224,15 +1258,28 @@ DynamicTable$methods(
             setOpt(col, 'gradient', opts)
             return(opts)
         }
-        ## min, max and midpoint of gradient
-        if (is.null(opts$min)) opts$min <- min( data[[ srcInd ]] )
-        if (is.null(opts$max)) opts$max <- max( data[[ srcInd ]] )
-        numBins <- ifelse(is.null(opts$bins),
-                   ifelse(is.null(opts$step), 15,
-                   (opts$max-opts$min)/opts$step[1]), opts$bins[1])
-        numBins <- opts$bins <- as.integer(numBins)
-        binVals <- opts$binVals <- seq(from=opts$min, to=opts$max,
-                                       length.out=numBins + 1)
+        if (is.null(opts$binVals) || is.na(opts$binVals[1])) {
+            ## Automatically calculate a linear gradient
+            ## Find min/max if not set:
+            if (is.null(opts$min)) opts$min <- min( data[[ srcInd ]] )
+            if (is.null(opts$max)) opts$max <- max( data[[ srcInd ]] )
+            ## Calculate number of bins
+            numBins <- ifelse(is.null(opts$bins),
+                       ifelse(is.null(opts$step), 15,
+                       (opts$max-opts$min)/opts$step[1]), opts$bins[1])
+            opts$bins <- as.integer(numBins)
+            ## Generate bins as linear sequence
+            opts$binVals <- seq(from=opts$min, to=opts$max,
+                                length.out= opts$bins + 1)
+        } else {
+            ## User has provided explicit bin values
+            ## Calculate derivative values:
+            opts$bins <- length(opts$binVals) - 1
+            opts$min  <- min( opts$binVals )
+            opts$max  <- max( opts$binVals )
+        }
+        numBins <- opts$bins
+        binVals <- opts$binVals
         if (is.null(opts$colors)) opts$colors <- c("#5555ff", "white", "red")
         ## https://stackoverflow.com/a/13353264
         scale <- if (opts$colors[1] %in% .standardColors) {
@@ -1298,6 +1345,11 @@ DynamicTable$methods(
                 styles <- c(styles, sprintf("  .%s { %s }", cls, sty))
             }
         }
+        
+        naCls <- opts$naClass <- sprintf("naClass-%d", srcInd)
+        styles <- c(styles, sprintf("  .%s { %s }", naCls,
+             if (is.def(opts$nastyle)) { opts$nastyle } else {
+             "background-color: #fdf" }))
         opts$styles <- paste(styles, collapse="\n") # Style lines
         opts$intTxt <- intTxt
         opts$numRow <- rowTxt

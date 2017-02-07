@@ -257,6 +257,10 @@ configuration.
     specify the bin size. If neither are specified, then 15 bins
     will be used.
 
+    \item "binVals" - An explicit list of bin values, will override
+    "min", "max", "bins" and "step". Used for specifying non-linear
+    gradient values.
+
     \item "colors" - The colors to use for generating the gradient,
     default are \code{c("#5555ff", "white", "red")}. These will be
     passed to \code{colorRampPalette()}
@@ -289,6 +293,9 @@ configuration.
     in an "<Other>" category. This is useful for handling columns
     that are mostly controlled vocabullary, but include a few
     "noisy" levels, eg "Yes (except when it is raining)"
+
+    \item "textFilter" - if \code{TRUE}, will include a free-text
+    filter box in addition to facetting buttons.
 
     \item "color" - A flag to control how factor levels are colored
 

@@ -652,10 +652,11 @@ DynamicTable$methods(
         ## callbacks that will be used while generating the HTML cells
         ## of the table. The list is keyed to output column
         ## index. That is, colInfo[[ 1 ]] holds information for the
-        ## first output column.
+        ## first OUTPUT column.
 
         colInfo <<- list(
-            srcInds   = integer(),   # Source column for output col
+            srcInds   = integer(),   # Source column index for output col
+            srcName   = character(), # Source column name
             name      = character(), # Display name for column
             urlCB     = list(),      # Hyperlink building callback
             urlInds   = integer(),   # Source column for URL data
@@ -687,6 +688,7 @@ DynamicTable$methods(
             doHide <- getOpt(col, 'hide')
             if (!is.null(doHide) && doHide) next # Not showing this column
             ci <- ci + 1 ## Move on to the next output column
+            colInfo$srcName[ci] <<- col
             srcInd <- colInfo$srcInds[ci] <<- getOpt(col, 'src') # input col
             colInfo$name[ci] <<- getOpt(col, 'name')
             ## If a title column is provided for the *cells*, note the
@@ -1018,11 +1020,22 @@ DynamicTable$methods(
         "<img src='foo.png' class='close' onclick='fClose(event)' title='Close filter settings'>"
     },
 
-    .submitAndReset = function( ) {
-        paste("<br>",
-              "<button class='submit' onclick='submitFilt(this)' title='Apply the filter'>Submit</button>",
-              "&nbsp;&diams;&nbsp;",
-              "<button class='reset' onclick='resetFilt(this)' title='Remove all filters from this column'>Reset</button>", sep='')
+    .submitAndReset = function( ci ) {
+        sar <- c("<br>",
+                 "<button class='submit' onclick='submitFilt(this)' title='Apply the filter'>Submit</button>",
+              "&nbsp;&diams;&nbsp;", .ResetButton( ci ))
+        paste(sar,  sep='')
+    },
+
+    .ResetButton = function( ci ) {
+        rb <- c("<button class='reset' onclick='resetFilt(this)' title='Remove all filters from this column'>Reset</button>")
+        hTit <- getOpt(colInfo$srcName[ci], 'coltitle')
+        if (!is.null(hTit)) {
+            ## Add the column title (description) to the end of the
+            ## filter widget
+            rb <- c(rb, sprintf("<div class='desc'>%s</div>", .aesc(hTit[1])))
+        }
+        paste(rb,  sep='')
     },
 
     .fallbackName = function( ci ) {
@@ -1042,14 +1055,14 @@ DynamicTable$methods(
             paste(.closeImage(), name, "Levels:")
         }
         paste(c(head,sprintf("<div col='%d' ftype='fact'>",ci),fOpts$buttons,
-                "<button class='reset' onclick='resetFilt(this)' title='Remove all filters from this column'>Reset</button>","</div>"), collapse="\n")
+                .ResetButton(ci), "</div>"), collapse="\n")
     },
 
     .textFilterWidget = function (ci, header=TRUE) {
         nm <- .fallbackName(ci)
         paste(c(.closeImage(),nm,"<br>",
                 "<div col='",ci,"' ftype='txt'><input class='txtFilt' onchange='textfilt(this)' value='' reset='' title='Show only rows matching this text (regular expressions supported)'>",
-                .submitAndReset(), "</div>"), collapse='')
+                .submitAndReset(ci), "</div>"), collapse='')
     },
 
     .numericFilterWidget = function( ci  ) {
@@ -1092,7 +1105,7 @@ DynamicTable$methods(
             qq, c("0-25%","25-50%","50-75%", "75-100%"),
             colInfo$quart[[ci]][1:4], colInfo$quart[[ci]][2:5], qq))
         }
-        rv <- c(rv, .submitAndReset(), "</div>")
+        rv <- c(rv, .submitAndReset(ci), "</div>")
         paste(rv, collapse='')
     },
 

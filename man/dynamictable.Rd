@@ -226,18 +226,29 @@ configuration.
 \item{"truncate"} - An integer value constraining column width. A
     cell will show at most this number of characters. If the value
     is exceeded, a clickable ellipses will be shown for the missing
-    text; Clicking on the ellipses will toggle visibility.
+    text; Clicking on the ellipses will toggle visibility. This
+    option is ignored for numeric columns.
 
 \item{"spacemap"} - A list of characters that should be shown as
     spaces. Useful for long identifiers that use underscores
     preventing text wrapping (eg MSigDB).
 
-\item{"percent"} - If non-null will merely affix a "\%" character to the
-    end of the column. Will not alter underlying values
+\item{"sprintf"} - If non-null will be used as a sprintf string to
+    format values in the cells. Original values will still be used
+    for sorting. Can be used on any column, but user is responsible
+    for using relevant formatting tokens.
+
+\item{"signif"} - If an integer between 1-22, will restrict the
+    column to that number of significant digits. Original values
+    will still be used for sorting. Does not affect non-numeric
+    columns, and will be ignored if sprintf is set.
 
 \item{"fold"} - If non-null will merely affix the &times; character entity
     (a slightly fancier "x") to the end of the column. Will not
     alter underlying values
+
+\item{"percent"} - If non-null will merely affix a "\%" character to the
+    end of the column. Will not alter underlying values
 
 \item{"gradient"} - Indicates that column cells should have a background
     color applied according to their value. The values will be
@@ -258,8 +269,8 @@ configuration.
     will be used.
 
     \item "binVals" - An explicit list of bin values, will override
-    "min", "max", "bins" and "step". Used for specifying non-linear
-    gradient values.
+    "min", "max", "bins" and "step". Useful for hand-specifying
+    non-linear (eg logarithmic/exponential) gradient values.
 
     \item "colors" - The colors to use for generating the gradient,
     default are \code{c("#5555ff", "white", "red")}. These will be

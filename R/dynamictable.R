@@ -187,18 +187,29 @@
 #' \item{"truncate"} - An integer value constraining column width. A
 #'     cell will show at most this number of characters. If the value
 #'     is exceeded, a clickable ellipses will be shown for the missing
-#'     text; Clicking on the ellipses will toggle visibility.
+#'     text; Clicking on the ellipses will toggle visibility. This
+#'     option is ignored for numeric columns.
 #' 
 #' \item{"spacemap"} - A list of characters that should be shown as
 #'     spaces. Useful for long identifiers that use underscores
 #'     preventing text wrapping (eg MSigDB).
 #' 
-#' \item{"percent"} - If non-null will merely affix a "\%" character to the
-#'     end of the column. Will not alter underlying values
+#' \item{"sprintf"} - If non-null will be used as a sprintf string to
+#'     format values in the cells. Original values will still be used
+#'     for sorting. Can be used on any column, but user is responsible
+#'     for using relevant formatting tokens.
+#' 
+#' \item{"signif"} - If an integer between 1-22, will restrict the
+#'     column to that number of significant digits. Original values
+#'     will still be used for sorting. Does not affect non-numeric
+#'     columns, and will be ignored if sprintf is set.
 #' 
 #' \item{"fold"} - If non-null will merely affix the &times; character entity
 #'     (a slightly fancier "x") to the end of the column. Will not
 #'     alter underlying values
+#' 
+#' \item{"percent"} - If non-null will merely affix a "\%" character to the
+#'     end of the column. Will not alter underlying values
 #' 
 #' \item{"gradient"} - Indicates that column cells should have a background
 #'     color applied according to their value. The values will be
@@ -219,8 +230,8 @@
 #'     will be used.
 #'
 #'     \item "binVals" - An explicit list of bin values, will override
-#'     "min", "max", "bins" and "step". Used for specifying non-linear
-#'     gradient values.
+#'     "min", "max", "bins" and "step". Useful for hand-specifying
+#'     non-linear (eg logarithmic/exponential) gradient values.
 #'
 #'     \item "colors" - The colors to use for generating the gradient,
 #'     default are \code{c("#5555ff", "white", "red")}. These will be
@@ -673,6 +684,8 @@ DynamicTable$methods(
             gradInfo  = list(),      # Gradient properties
             quart     = list(),      # Quartile boundaries for numeric cols
             truncLen  = integer(),   # Truncation length
+            signif    = integer(),   # Significant figures
+            sprintf   = character(), # Optional sprintf() format
             spaceMap  = list(),      # Chars that should be shown as spaces
             usedFact  = integer(),   # Output columns that were factorized
             filtHTML  = character(), # HTML factor filter widgets
@@ -817,7 +830,8 @@ DynamicTable$methods(
             if (ci == sortInd) th <- c(th, " sorted='up'")
             cls <- character()
             colInfo$quart[[ ci ]] <<- NA
-            if (is.numeric(data[[srcInd]])) {
+            isNum <- is.numeric(data[[srcInd]])
+            if (isNum) {
                 ## Note that the column is numeric to guide Javascript sorting:
                 th <- paste(th, " isnum='1'")
                 ## Add a column-level style rule
@@ -833,6 +847,14 @@ DynamicTable$methods(
                     allStyles <- c(allStyles, sprintf(
                        "  tr[filt%d='yes'] { display: none ! important; }",ci))
                 }
+                sig <- getOpt(col, 'signif')
+                if (is.null(sig) || is.na(sig[1])) {
+                    sig <- NA
+                } else if (!is.numeric(sig) || sig[1] < 1 || sig[1] > 22) {
+                    message("Column option 'signif' for ",col," should be an integer between 1-22")
+                    sig <- NA
+                }
+                colInfo$signif[ ci ] <<- as.integer(sig[1])
             }
             
             if (filtBox == "") {
@@ -864,11 +886,16 @@ DynamicTable$methods(
                         "<div class='filtBox' draggable='true' title='Filter settings for column ",.aesc(col),"'>", filtBox,
                         "</div>")
             }
+
+            ## Custom sprintf formatting for displayed values
+            spf <- getOpt(col, 'sprintf')
+            if (is.null(spf)) spf <- NA
+            colInfo$sprintf[ ci ] <<- spf[1]
             
             ## Dynamic truncated text management:
             tLen <- getOpt(col, 'truncate')
-            if (is.null(tLen) || is.na(tLen[1])) {
-                ## No truncation requested
+            if (isNum || is.null(tLen) || is.na(tLen[1])) {
+                ## No truncation requested, or column is numeric
                 colInfo$truncLen[[ ci ]] <<- NA
             } else {
                 ## Validate setting as integer
@@ -981,7 +1008,8 @@ DynamicTable$methods(
             url <- file
             ## Make the path absolute if it is not already
             ## Blech. Escaping for [\/]...
-            if (!grepl('^[\\\\/]', url)) url <- file.path(getwd(), url)
+            if (!grepl('^(\\\\|/|[A-Z]:)', url, ignore.case = TRUE))
+                url <- file.path(getwd(), url)
             browseURL(paste("file://", url, sep=""))
         }
         file
@@ -1124,20 +1152,32 @@ DynamicTable$methods(
         ## (rowIndex,colIndex) and builds the <td> object to add to
         ## the table.
         val   <- data[ ri, colInfo$srcInds[ci] ] # Value from input
-        if (!is.def(val)) val <- ""
         ## Are there characters we should map to spaces?
         sm    <- colInfo$spaceMap[[ ci ]]
         if (!is.na(sm)) val <- gsub(sm, ' ', val)
-        ## Should we dynamically truncate long cells?
-        tLen  <- colInfo$truncLen[[ ci ]]
-        trunc <- NULL
-        rawV  <- FALSE
-        if (!is.na(tLen) && tLen > 0 && nchar(val) > tLen) {
-            ## Request to truncate long cells
-            rgtVal <- substr(val, tLen+1, nchar(val))
-            trunc <- sprintf("<span class='trunc'>%s</span><span onclick='tTog(this)' class='tTog' title='%s'>&hellip;</span>", .hesc(rgtVal), "toggle visibility of long text")
-            val <- substr(val, 1, tLen)
+        trunc <- NULL  # DHTML trunctation toggle widget
+        rawV  <- FALSE # Flag to keep raw value in attribute
+        if (!is.na(colInfo$sprintf[ci])) {
+            ## Apply a sprintf() formula to the data
+            val  <- sprintf(colInfo$sprintf[ci], val)
+            if (val == "NA") val <- ""
             rawV <- TRUE
+        } else if (!is.na(colInfo$signif[ci])) {
+            ## Round column to requested significant figures
+            val  <- signif(val, colInfo$signif[ci])
+            if (is.na(val)) val <- ""
+            rawV <- TRUE
+        } else {
+            if (!is.def(val)) val <- ""
+            ## Should we dynamically truncate long cells?
+            tLen  <- colInfo$truncLen[[ ci ]]
+            if (!is.na(tLen) && tLen > 0 && nchar(val) > tLen) {
+                ## Request to truncate long cells
+                rgtVal <- substr(val, tLen+1, nchar(val))
+                trunc <- sprintf("<span class='trunc'>%s</span><span onclick='tTog(this)' class='tTog' title='%s'>&hellip;</span>", .hesc(rgtVal), "toggle visibility of long text")
+                val <- substr(val, 1, tLen)
+                rawV <- TRUE
+            }
         }
         
         val  <- .hesc(val) # HTML escaped

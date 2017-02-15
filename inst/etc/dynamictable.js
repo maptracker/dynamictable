@@ -367,10 +367,15 @@ function rangefilt (obj) {
 
     // Get the minimum and maximum values to show
     var rngs = par.getElementsByTagName('input');
-    var min  = parseFloat(rngs[0].value)
-    if (isNaN(min)) min = -Infinity;
-    var max  = parseFloat(rngs[1].value)
-    if (isNaN(max)) max = Infinity;
+    var min  = parseFloat(rngs[0].value);
+    var max  = parseFloat(rngs[1].value);
+    if (isNaN(min)) {
+        // If both min/man are not numerically defined, reset filter:
+        if (isNaN(max)) return _unfilterColumn(fNm, ind);
+        min = -Infinity;
+    } else if (isNaN(max)) {
+        max = Infinity;
+    }
 
     var filtFunc = function (tr) {
         var val  = parseFloat(cellVal(tr.childNodes[ind]));
@@ -393,6 +398,25 @@ function intfilt (obj) {
     if (max == null) max = inps[1].getAttribute('reset');
     inps[1].value = max;
     return rangefilt( inps[0] )
+}
+
+function _unfilterColumn (fNm, ind) {
+    var tab  = document.getElementById('data');
+    var trs  = tab.getElementsByTagName('tr');
+    var tl   = trs.length;
+    for (var t = 1; t < tl; t++) {
+        var tr = trs[t];
+        tr.setAttribute(fNm, 'no'); // Unhide each row
+    }
+    // Update filter icon
+    var th   = trs[0].getElementsByTagName('th')[ind];
+    var icon = th.getElementsByClassName('fTog')[0];
+    if (icon) {
+        icon.setAttribute('filtered', 'no');
+        icon.setAttribute('title', 
+                          'No rows hidden by this filter, click to change');
+    }
+    return 0;
 }
 
 function _filterTable (filtFunc, fNm, ind, msg) {
@@ -470,7 +494,7 @@ function resetFilt(obj, noAction) {
         var inps = par.getElementsByTagName('input');
         for (var i = 0; i < inps.length; i++ ) {
             var inp = inps[i];
-            inp.value = inp.getAttribute('reset');
+            inp.value = ''; // Set range fields to blank value
         }
         return rangefilt( inps[0] );
     } else if (ft == 'fact') {

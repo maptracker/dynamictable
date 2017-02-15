@@ -316,7 +316,13 @@ function doSort(e) {
     for (var t = 1; t < tl; t++) {
         var tr = trs[t]
         var val = tr.childNodes[ind].textContent;
-        val = isnum ? parseFloat(val) : val.toLowerCase();
+        if (isnum) {
+            val = parseFloat(val);
+            // Put NA values "at the end", regardless of sort
+            if (isNaN(val)) val = (srt < 0) ? -Infinity : Infinity
+        } else {
+            val = val.toLowerCase();
+        }
         /* trs is not just an array - it's a 'live' object. We can not
            stuff rows back into the table by referencing trs[ index ],
            we need the actual row - hold onto it in data */

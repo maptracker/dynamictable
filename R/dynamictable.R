@@ -548,7 +548,8 @@ DynamicTable$methods(
         derivCols    <- names(autoMatch)
         for (col in colnames(data)) {
             i <- matchCol(col)
-            if (!is.null(getOpt(col, 'factor')) ||
+            doFact <- getOpt(col, 'factor')
+            if ((!is.null(doFact) && (!is.logical(doFact) || doFact)) ||
                 (doAutoFactor && is.factor(data[[i]]))) {
                 ## An explicit request to treat the column as a
                 ## factor, or auto.factor is on and column is classed
@@ -826,7 +827,8 @@ DynamicTable$methods(
                 if (filtBox == "") {
                     ## Set the fitler box
                     ## Quantile levels
-                    colInfo$quart[[ ci ]] <<- quantile(data[[ srcInd ]])
+                    colInfo$quart[[ ci ]] <<- quantile(data[[ srcInd ]],
+                                                       na.rm=TRUE)
                     filtBox <- .numericFilterWidget(ci)
                     allStyles <- c(allStyles, sprintf(
                        "  tr[filt%d='yes'] { display: none ! important; }",ci))
@@ -975,7 +977,13 @@ DynamicTable$methods(
 
         writeLines("</div></body></html>", fh)
         close(fh)
-        if (display.url) browseURL(paste("file://", file, sep=""))
+        if (display.url) {
+            url <- file
+            ## Make the path absolute if it is not already
+            ## Blech. Escaping for [\/]...
+            if (!grepl('^[\\\\/]', url)) url <- file.path(getwd(), url)
+            browseURL(paste("file://", url, sep=""))
+        }
         file
     },
 
@@ -1067,8 +1075,8 @@ DynamicTable$methods(
 
     .numericFilterWidget = function( ci  ) {
         srcInd <- colInfo$srcInds[ci]
-        mn <- min(data[[srcInd]])
-        mx <- max(data[[srcInd]])
+        mn <- min(data[[srcInd]], na.rm = TRUE)
+        mx <- max(data[[srcInd]], na.rm = TRUE)
         nm <- .fallbackName(ci)
         rv <- c(.closeImage(),nm," range:<br>")
         sf <- 5
@@ -1274,8 +1282,10 @@ DynamicTable$methods(
         if (is.null(opts$binVals) || is.na(opts$binVals[1])) {
             ## Automatically calculate a linear gradient
             ## Find min/max if not set:
-            if (is.null(opts$min)) opts$min <- min( data[[ srcInd ]] )
-            if (is.null(opts$max)) opts$max <- max( data[[ srcInd ]] )
+            if (is.null(opts$min)) opts$min <-
+                                       min( data[[ srcInd ]], na.rm = TRUE )
+            if (is.null(opts$max)) opts$max <-
+                                       max( data[[ srcInd ]], na.rm = TRUE )
             ## Calculate number of bins
             numBins <- ifelse(is.null(opts$bins),
                        ifelse(is.null(opts$step), 15,
@@ -1288,8 +1298,8 @@ DynamicTable$methods(
             ## User has provided explicit bin values
             ## Calculate derivative values:
             opts$bins <- length(opts$binVals) - 1
-            opts$min  <- min( opts$binVals )
-            opts$max  <- max( opts$binVals )
+            opts$min  <- min( opts$binVals, na.rm = TRUE )
+            opts$max  <- max( opts$binVals, na.rm = TRUE )
         }
         numBins <- opts$bins
         binVals <- opts$binVals
@@ -1380,6 +1390,8 @@ DynamicTable$methods(
         ## derivative data structures (HTML widgets and CSS styles)
         col  <- stndCol( col, names(data) )
         opts <- getOpt( col, 'factor' )
+        ## Explicit request to not treat as factor:
+        if (is.logical(opts) && !opts) return (opts)
         ## Normalize settings to list:
         if (!is.list(opts)) opts <- list(normalized = FALSE)
         if (any(opts$normalized)) return (opts) # Only need to normalize once
@@ -1585,13 +1597,14 @@ DynamicTable$methods(
     
     setDefaultOpt = function (col, key, val) {
         ## Set an option, but only if it is not set already
-        if (is.null(options[[ col ]])) {
-            options[[col]] <<- list()
-            options[[col]][[key]] <<- val
-        } else if (is.null(options[[ col ]][[ key ]])) {
-            options[[col]][[key]] <<- val
+        ## Use getOpt() to check both options and params
+        rv <- getOpt(col, key)
+        if (is.null(rv)) {
+            ## No value set, use the provided value
+            if (is.null(options[[ col ]])) options[[col]] <<- list()
+            rv <- options[[col]][[key]] <<- val
         }
-        val
+        rv
     },
     
     xtndOpt = function (col, key, val) {
